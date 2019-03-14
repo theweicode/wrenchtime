@@ -35,7 +35,7 @@ import {
   MenuItem,
   PageHeader,
   Navbar
-} from "react-bootstrap";
+} from "reactstrap";
 
 //initilize firebase
 firebase.initializeApp({
@@ -46,6 +46,8 @@ firebase.initializeApp({
   storageBucket: "wrenchtime-b4yt.appspot.com",
   messagingSenderId: "251706795155"
 });
+
+const db = firebase.firestore();
 
 class App extends Component {
   constructor() {
@@ -85,6 +87,22 @@ class App extends Component {
     this.authService.signOut();
   }
 
+  handleAddCar() {
+    db.collection("cars")
+      .doc("username_goes_here1")
+      .set({
+        make: "make_goes_here",
+        model: "model_goes_here",
+        mileage: "120000"
+      })
+      .then(function() {
+        console.log("Document successfully written!");
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
+  }
+
   render() {
     let body;
     if (!this.state.user) {
@@ -106,7 +124,12 @@ class App extends Component {
             <div className="container">
               <Route path="/" component={Header} />
               <Route exact path="/" component={Home} />
-              <Route exact path="/components/Car" component={Car} />
+              <Route
+                exact
+                path="/components/Car"
+                component={Car}
+                render={this.handleAddCar}
+              />
               <Route exact path="/components/Wrench" component={Wrench} />
               <Route exact path="/components/Time" component={Time} />
               <Route exact path="/components/About" component={About} />
