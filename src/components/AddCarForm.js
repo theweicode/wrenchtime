@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-
+import firebase from "firebase/app";
 class AddCarForm extends Component {
   state = {
     make: "",
     model: "",
-    year: 0
+    year: 0,
+    mileage: ""
   };
 
   handleValueChange = e => {
@@ -13,8 +14,17 @@ class AddCarForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.addCar(this.state.make, this.state.model, this.state.year);
-    this.setState({ make: "", model: "", year: 0 });
+
+    /*  ADDING DATA */
+    var carsRef = firebase.firestore().collection("cars");
+    var setCar1 = carsRef.doc().set({
+      id: 1,
+      year: this.state.year,
+      make: this.state.make,
+      model: this.state.model,
+      mileage: this.state.mileage
+    });
+    this.setState({ make: "", model: "", year: 0, mileage: "" });
   };
 
   render() {
@@ -40,6 +50,13 @@ class AddCarForm extends Component {
           onChange={this.handleValueChange}
           placeholder="Enter car's year"
           name="year"
+        />
+        <input
+          type="text"
+          value={this.state.mileage}
+          onChange={this.handleValueChange}
+          placeholder="Enter car's year"
+          name="mileage"
         />
         <input type="submit" value="Add Car" />
       </form>

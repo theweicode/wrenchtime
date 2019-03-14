@@ -17,9 +17,10 @@ import Time from "./components/Time";
 import About from "./components/About";
 import Picture from "./components/Picture";
 import firebase from "firebase/app";
+import FBConfig from "./components/FBConfig";
 
 //react-bootstrap
-import {
+/* import {
   Grid,
   Row,
   Col,
@@ -35,19 +36,12 @@ import {
   MenuItem,
   PageHeader,
   Navbar
-} from "reactstrap";
+} from "reactstrap"; */
 
 //initilize firebase
-firebase.initializeApp({
-  apiKey: "AIzaSyBUGJfi6yh4Gsn1ljsN74AgNz6_IG7Bhhk",
-  authDomain: "wrenchtime-b4yt.firebaseapp.com",
-  databaseURL: "https://wrenchtime-b4yt.firebaseio.com",
-  projectId: "wrenchtime-b4yt",
-  storageBucket: "wrenchtime-b4yt.appspot.com",
-  messagingSenderId: "251706795155"
-});
+firebase.initializeApp(FBConfig);
 
-const db = firebase.firestore();
+let db = firebase.firestore();
 
 class App extends Component {
   constructor() {
@@ -68,8 +62,20 @@ class App extends Component {
     this.authService.currentUser$
       .pipe(switchMap(u => (u ? this.store.destinations$ : observableFrom([]))))
       .subscribe(destinations => this.setState({ destinations }));
-  }
 
+    /**Add data here to Firestore
+    var docRef = db.collection("cars").doc("will");
+
+    var setCar = docRef.set({
+      year: 2008,
+      make: "Toyoa",
+      model: "Corolla",
+      id: 2
+    });
+ 
+
+   */
+  }
   componentWillUnmount() {
     this.currentUserSubscription.unsubscribe();
     this.destinationsSubscription.unsubscribe();
@@ -87,7 +93,7 @@ class App extends Component {
     this.authService.signOut();
   }
 
-  handleAddCar() {
+  /* handleAddCar() {
     db.collection("cars")
       .doc("username_goes_here1")
       .set({
@@ -102,7 +108,7 @@ class App extends Component {
         console.error("Error writing document: ", error);
       });
   }
-
+ */
   render() {
     let body;
     if (!this.state.user) {
@@ -124,12 +130,7 @@ class App extends Component {
             <div className="container">
               <Route path="/" component={Header} />
               <Route exact path="/" component={Home} />
-              <Route
-                exact
-                path="/components/Car"
-                component={Car}
-                render={this.handleAddCar}
-              />
+              <Route exact path="/components/Car" component={Car} />
               <Route exact path="/components/Wrench" component={Wrench} />
               <Route exact path="/components/Time" component={Time} />
               <Route exact path="/components/About" component={About} />

@@ -2,41 +2,38 @@ import React, { Component } from "react";
 import AddCarForm from "./AddCarForm";
 import CarList from "./CarList";
 import { Table } from "reactstrap";
-
-/* import { prependOnceListener } from "cluster"; */
+/* import firebase from "firebase/app";
+import FBConfig from "./FBConfig"; */
+import firebase from "firebase/app";
 
 class Car extends Component {
   state = {
-    cars_owned: [
-      {
-        year: 2003,
-        make: "Nissan",
-        model: "350z",
-        id: 1
-      },
-      {
-        year: 2008,
-        make: "Toyoa",
-        model: "Corolla",
-        id: 2
-      }
-    ]
+    cars_owned: []
   };
 
-  handleAddCar = (make, model, year) => {
-    this.setState(prevState => {
-      return {
-        cars_owned: [
-          ...prevState.cars_owned,
-          {
-            year: year,
-            make: make,
-            model: model
-          }
-        ]
-      };
-    });
-  };
+  componentDidMount() {
+    var carsRef = firebase.firestore().collection("cars");
+    var query = carsRef
+      .get()
+      .then(snapshot => {
+        if (snapshot.empty) {
+          console.log("No matching documents.");
+          return;
+        }
+
+        snapshot.forEach(doc => {
+          console.log(doc.id, "=>", doc.data());
+          //** attempt to put this snapshot of data to use */
+          var newArray = this.state.cars_owned.slice();
+          newArray.push(doc.data());
+          this.setState({ cars_owned: newArray });
+          console.log("this.state.cars_owned: ", this.state.cars_owned);
+        });
+      })
+      .catch(err => {
+        console.log("Error getting documents", err);
+      });
+  }
 
   render() {
     return (
@@ -51,6 +48,7 @@ class Car extends Component {
               <th>Make</th>
               <th>Model</th>
               <th>Year</th>
+              <th>Mileage</th>
             </tr>
           </thead>
           <tbody>
@@ -59,12 +57,13 @@ class Car extends Component {
                 year={cars_owned.year}
                 make={cars_owned.make}
                 model={cars_owned.model}
-                key={cars_owned.id}
+                key={cars_owned.id.toString()}
+                id={cars_owned.id}
               />
             ))}
           </tbody>
         </Table>
-        <AddCarForm addCar={this.handleAddCar} />
+        <AddCarForm />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import React from "react";
 const CarList = props => {
   return (
     <tr>
-      <td>{props.key}</td>
+      <th>{props.id}</th>
       <td>{props.make}</td>
       <td>{props.model}</td>
       <td>{props.year}</td>
