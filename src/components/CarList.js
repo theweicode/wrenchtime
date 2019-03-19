@@ -8,9 +8,7 @@ const CarList = props => {
       <td>{props.model}</td>
       <td>{props.year}</td>
       <td>
-        <form type="submit" onClick={() => props.removeCar(props.keyValue)}>
-          X
-        </form>
+        <form onClick={() => props.removeCar(props.keyValue)}>X</form>
       </td>
     </tr>
   );

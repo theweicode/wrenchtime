@@ -7,9 +7,14 @@ import FBConfig from "./FBConfig"; */
 import firebase from "firebase/app";
 
 class Car extends Component {
-  state = {
-    cars_owned: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      cars_owned: []
+    };
+    this.handleRemoveFromList = this.handleRemoveFromList.bind(this);
+    this.handleRemoveCar = this.handleRemoveCar.bind(this);
+  }
 
   componentDidMount() {
     this.onRealTimeListener();
@@ -31,10 +36,17 @@ class Car extends Component {
     this.setState({
       cars_owned: newArray
     });
-    console.log("cars_owned: ", this.state.cars_owned);
   }
 
-  handleRemoveCar = id => {
+  handleRemoveFromList(id) {
+    this.setState(prevState => {
+      return {
+        cars_owned: prevState.cars_owned.filter(p => p.id !== id)
+      };
+    });
+  }
+
+  handleRemoveCar(id) {
     firebase
       .firestore()
       .collection(this.props.email)
@@ -46,9 +58,10 @@ class Car extends Component {
       .catch(function(error) {
         console.error("Error removing document: ", error);
       });
-  };
+    this.forceUpdate();
+  }
 
-  onRealTimeListener = () => {
+  onRealTimeListener() {
     firebase
       .firestore()
       .collection("williamting@gmail.com")
@@ -64,7 +77,7 @@ class Car extends Component {
           }
         });
       });
-  };
+  }
 
   render() {
     return (

@@ -19,25 +19,6 @@ import Picture from "./components/Picture";
 import firebase from "firebase/app";
 import FBConfig from "./components/FBConfig";
 
-//react-bootstrap
-/* import {
-  Grid,
-  Row,
-  Col,
-  Clearfix,
-  Alert,
-  Badge,
-  Button,
-  Jumbotron,
-  FormGroup,
-  ButtonGroup,
-  ButtonToolbar,
-  DropdownButton,
-  MenuItem,
-  PageHeader,
-  Navbar
-} from "reactstrap"; */
-
 //initilize firebase
 firebase.initializeApp(FBConfig);
 const db = firebase.firestore();
@@ -62,19 +43,6 @@ class App extends Component {
     this.authService.currentUser$
       .pipe(switchMap(u => (u ? this.store.destinations$ : observableFrom([]))))
       .subscribe(destinations => this.setState({ destinations }));
-
-    /**Add data here to Firestore
-    var docRef = db.collection("cars").doc("will");
-
-    var setCar = docRef.set({
-      year: 2008,
-      make: "Toyoa",
-      model: "Corolla",
-      id: 2
-    });
- 
-
-   */
   }
   componentWillUnmount() {
     this.currentUserSubscription.unsubscribe();
@@ -93,22 +61,6 @@ class App extends Component {
     this.authService.signOut();
   }
 
-  /* handleAddCar() {
-    db.collection("cars")
-      .doc("username_goes_here1")
-      .set({
-        make: "make_goes_here",
-        model: "model_goes_here",
-        mileage: "120000"
-      })
-      .then(function() {
-        console.log("Document successfully written!");
-      })
-      .catch(function(error) {
-        console.error("Error writing document: ", error);
-      });
-  }
- */
   render() {
     let body;
     if (!this.state.user) {
@@ -118,7 +70,7 @@ class App extends Component {
         <div>
           <p>
             Signed in as: {this.state.user.displayName}
-            {console.log("this.state.user: ", this.state.user.email)}
+            {/*  {console.log("this.state.user: ", this.state.user.email)} */}
             <button onClick={this.handleSignOut}>Sign out</button>
           </p>
           <p>Loading data...</p>
