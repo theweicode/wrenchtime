@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { FirebaseAuth } from "react-firebaseui";
 
-class SignInDialog extends Component {
+class TestMethod extends Component {
   constructor(props) {
     super(props);
     this.firebaseUiConfig = {
@@ -11,8 +11,7 @@ class SignInDialog extends Component {
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        firebase.auth.GithubAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID
+        firebase.auth.GithubAuthProvider.PROVIDER_ID
       ],
       callbacks: {
         signInSuccessWithAuthResult: result => {
@@ -20,6 +19,19 @@ class SignInDialog extends Component {
         }
       }
     };
+  }
+
+  componentDidMount() {
+    db.collection("cars")
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          console.log(doc.id, "=>", doc.data());
+        });
+      })
+      .catch(err => {
+        console.log("Error getting documents", err);
+      });
   }
 
   render() {
@@ -32,4 +44,4 @@ class SignInDialog extends Component {
   }
 }
 
-export default SignInDialog;
+export default TestMethod;

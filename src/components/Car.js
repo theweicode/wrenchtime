@@ -12,34 +12,65 @@ class Car extends Component {
   };
 
   componentDidMount() {
-    var carsRef = firebase.firestore().collection("cars");
-    var query = carsRef
-      .get()
-      .then(snapshot => {
-        if (snapshot.empty) {
-          console.log("No matching documents.");
-          return;
-        }
-
-        snapshot.forEach(doc => {
-          console.log(doc.id, "=>", doc.data());
-          //** attempt to put this snapshot of data to use */
-          var newArray = this.state.cars_owned.slice();
-          newArray.push(doc.data());
-          this.setState({ cars_owned: newArray });
-          console.log("this.state.cars_owned: ", this.state.cars_owned);
-        });
-      })
-      .catch(err => {
-        console.log("Error getting documents", err);
-      });
+    this.onRealTimeListener();
   }
+
+  renderCarList(cars) {
+    /* console.log(
+      "data has been added: ",
+      cars.type,
+      cars.doc.id,
+      cars.doc.data()
+    ); */
+    var newArray = this.state.cars_owned.slice();
+    newArray.push(cars.doc.data());
+    newArray[this.state.cars_owned.length].id = cars.doc.id;
+    newArray[this.state.cars_owned.length].count = [
+      this.state.cars_owned.length + 1
+    ];
+    this.setState({
+      cars_owned: newArray
+    });
+    console.log("cars_owned: ", this.state.cars_owned);
+  }
+
+  handleRemoveCar = id => {
+    firebase
+      .firestore()
+      .collection(this.props.email)
+      .doc(id)
+      .delete()
+      .then(function() {
+        console.log("Document successfully deleted!");
+      })
+      .catch(function(error) {
+        console.error("Error removing document: ", error);
+      });
+  };
+
+  onRealTimeListener = () => {
+    firebase
+      .firestore()
+      .collection("williamting@gmail.com")
+      .orderBy("year")
+      .onSnapshot(snapshot => {
+        let changes = snapshot.docChanges();
+        changes.forEach(change => {
+          if (change.type == "added") {
+            this.renderCarList(change);
+          } else if (change.type == "removed") {
+            /* let li = cafeList.querySelector('[data-id=' + change.doc.id + ']') */
+            console.log(change.type);
+          }
+        });
+      });
+  };
 
   render() {
     return (
       <div className="container">
         <img className="showcase" src="https://i.imgur.com/qLtnksU.jpg" />
-
+        <AddCarForm email={this.props.email} />
         <h3>Car List</h3>
         <Table>
           <thead>
@@ -48,22 +79,23 @@ class Car extends Component {
               <th>Make</th>
               <th>Model</th>
               <th>Year</th>
-              <th>Mileage</th>
             </tr>
           </thead>
           <tbody>
-            {this.state.cars_owned.map(cars_owned => (
+            {this.state.cars_owned.map(car => (
               <CarList
-                year={cars_owned.year}
-                make={cars_owned.make}
-                model={cars_owned.model}
-                key={cars_owned.id.toString()}
-                id={cars_owned.id}
+                year={car.year}
+                make={car.make}
+                model={car.model}
+                mileage={car.mileage}
+                id={car.count}
+                key={car.id}
+                keyValue={car.id}
+                removeCar={this.handleRemoveCar}
               />
             ))}
           </tbody>
         </Table>
-        <AddCarForm />
       </div>
     );
   }

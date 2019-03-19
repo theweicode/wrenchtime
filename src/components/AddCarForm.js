@@ -4,8 +4,8 @@ class AddCarForm extends Component {
   state = {
     make: "",
     model: "",
-    year: 0,
-    mileage: ""
+    year: 1900,
+    mileage: 0
   };
 
   handleValueChange = e => {
@@ -16,14 +16,17 @@ class AddCarForm extends Component {
     e.preventDefault();
 
     /*  ADDING DATA */
-    var carsRef = firebase.firestore().collection("cars");
-    var setCar1 = carsRef.doc().set({
-      id: 1,
-      year: this.state.year,
-      make: this.state.make,
-      model: this.state.model,
-      mileage: this.state.mileage
-    });
+    var carsRef = firebase.firestore().collection(this.props.email);
+    var setCar1 = carsRef.doc().set(
+      {
+        // need to add auto id creator
+        year: this.state.year,
+        make: this.state.make,
+        model: this.state.model,
+        mileage: this.state.mileage
+      },
+      { merge: true }
+    );
     this.setState({ make: "", model: "", year: 0, mileage: "" });
   };
 
@@ -55,7 +58,7 @@ class AddCarForm extends Component {
           type="text"
           value={this.state.mileage}
           onChange={this.handleValueChange}
-          placeholder="Enter car's year"
+          placeholder="Enter car's mileage"
           name="mileage"
         />
         <input type="submit" value="Add Car" />

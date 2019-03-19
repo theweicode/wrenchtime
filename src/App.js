@@ -40,8 +40,7 @@ import FBConfig from "./components/FBConfig";
 
 //initilize firebase
 firebase.initializeApp(FBConfig);
-
-let db = firebase.firestore();
+const db = firebase.firestore();
 
 class App extends Component {
   constructor() {
@@ -59,6 +58,7 @@ class App extends Component {
     this.currentUserSubscription = this.authService.currentUser$.subscribe(
       user => this.setState({ user })
     );
+
     this.authService.currentUser$
       .pipe(switchMap(u => (u ? this.store.destinations$ : observableFrom([]))))
       .subscribe(destinations => this.setState({ destinations }));
@@ -118,6 +118,7 @@ class App extends Component {
         <div>
           <p>
             Signed in as: {this.state.user.displayName}
+            {console.log("this.state.user: ", this.state.user.email)}
             <button onClick={this.handleSignOut}>Sign out</button>
           </p>
           <p>Loading data...</p>
@@ -130,7 +131,13 @@ class App extends Component {
             <div className="container">
               <Route path="/" component={Header} />
               <Route exact path="/" component={Home} />
-              <Route exact path="/components/Car" component={Car} />
+              <Route
+                exact
+                path="/components/Car"
+                render={props => (
+                  <Car {...props} email={this.state.user.email} />
+                )}
+              />
               <Route exact path="/components/Wrench" component={Wrench} />
               <Route exact path="/components/Time" component={Time} />
               <Route exact path="/components/About" component={About} />
