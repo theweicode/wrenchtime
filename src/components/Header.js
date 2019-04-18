@@ -5,9 +5,12 @@ import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from "reactstrap";
 const Header = () => (
   <header>
     <span className="wrn-logo">
-      <i className="material-icons" />
+      <ul>
+        <li>Garage</li>
+      </ul>
     </span>
     <ul className="main-nav">
+      <img className="logo" src="https://i.imgur.com/SRQoMXF.png" />
       <li>
         <NavLink exact to="/">
           Home

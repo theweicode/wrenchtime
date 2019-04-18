@@ -1,8 +1,7 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 
-const About = () => (
-  <div className="container">
+const Banner = () => (
+  <div className="banner">
     <p>
       When I grew up I was lucky to have a mechanic as a stepfather. While we
       not have gotten along in every way he did show me how to work on my car.
@@ -20,4 +19,4 @@ const About = () => (
   </div>
 );
 
-export default About;
+export default Banner;

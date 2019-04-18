@@ -4,8 +4,8 @@ class AddCarForm extends Component {
   state = {
     make: "",
     model: "",
-    year: 1900,
-    mileage: 0
+    year: "",
+    mileage: ""
   };
 
   handleValueChange = e => {
@@ -27,7 +27,8 @@ class AddCarForm extends Component {
       },
       { merge: true }
     );
-    this.setState({ make: "", model: "", year: 0, mileage: "" });
+    this.setState({ make: "", model: "", year: "", mileage: "" });
+    this.nameInput.focus();
   };
 
   render() {
@@ -39,6 +40,9 @@ class AddCarForm extends Component {
           onChange={this.handleValueChange}
           placeholder="Enter car's make"
           name="make"
+          ref={input => {
+            this.nameInput = input;
+          }}
         />
         <input
           type="text"

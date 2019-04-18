@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "reactstrap";
 
 const CarList = props => {
   return (
@@ -8,7 +9,7 @@ const CarList = props => {
       <td>{props.model}</td>
       <td>{props.year}</td>
       <td>
-        <form onClick={() => props.removeCar(props.keyValue)}>X</form>
+        <Button onClick={() => props.removeCar(props.keyValue)}>X</Button>
       </td>
     </tr>
   );

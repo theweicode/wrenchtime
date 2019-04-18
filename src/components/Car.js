@@ -58,22 +58,20 @@ class Car extends Component {
       .catch(function(error) {
         console.error("Error removing document: ", error);
       });
-    this.forceUpdate();
   }
 
   onRealTimeListener() {
     firebase
       .firestore()
-      .collection("williamting@gmail.com")
-      .orderBy("year")
+      .collection(this.props.email)
+
       .onSnapshot(snapshot => {
         let changes = snapshot.docChanges();
         changes.forEach(change => {
-          if (change.type == "added") {
+          if (change.type === "added") {
             this.renderCarList(change);
-          } else if (change.type == "removed") {
-            /* let li = cafeList.querySelector('[data-id=' + change.doc.id + ']') */
-            console.log(change.type);
+          } else if (change.type === "removed") {
+            this.handleRemoveFromList(change.doc.id);
           }
         });
       });
@@ -92,6 +90,7 @@ class Car extends Component {
               <th>Make</th>
               <th>Model</th>
               <th>Year</th>
+              <th>Remove</th>
             </tr>
           </thead>
           <tbody>
